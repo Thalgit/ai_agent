@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import sys
-from call_function import available_functions
+from call_function import available_functions, call_function
 from prompts import system_prompt
 
 load_dotenv()
@@ -53,8 +53,23 @@ def main():
         print(response.text)
         return
 
+    tool_parts = []
+
     for function_call_part in response.function_calls:
-        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+        function_call_result = call_function(function_call_part, verbose=verbose)
+
+        if not function_call_result.parts:
+            raise Exception("Function call returned no parts")
+        
+        part = function_call_result.parts[0]
+
+        if not part.function_response or not part.function_response.response:
+            raise Exception("Function call result missing function_response.response")
+
+        tool_parts.append(part)
+
+        if verbose:
+            print(f"-> {part.function_response.response}")
         
 
 if __name__ == "__main__":
