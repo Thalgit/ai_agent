@@ -67,13 +67,39 @@ def main():
             #klaar?
 
             if not found_function_call_in_response and response.text != "":
-                print(response.text)
+                print(response)
                 break
 
         except Exception as e:
             return f"Error: {e}"
 
+
+    """ if verbose:
+        print(f"Prompt tokens: {response.usage_metadata.prompt_token_count}")
+        print(f"Response tokens: {response.usage_metadata.candidates_token_count}")
+
+    if not response.function_calls:
+        print(response.text)
+        return
+
+    tool_parts = []
+
+    for function_call_part in response.function_calls:
+        function_call_result = call_function(function_call_part, verbose=verbose)
+
+        if not function_call_result.parts:
+            raise Exception("Function call returned no parts")
+        
+        part = function_call_result.parts[0]
+
+        if not part.function_response or not part.function_response.response:
+            raise Exception("Function call result missing function_response.response")
+
+        tool_parts.append(part)
+
+        if verbose:
+            print(f"-> {part.function_response.response}") """
+        
+
 if __name__ == "__main__":
     main()
-
-
